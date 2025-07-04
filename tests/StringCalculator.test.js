@@ -48,5 +48,18 @@ test("should throw exception for multiple negative numbers", () => {
   }).toThrow("negatives not allowed: -4, -5");
 });
 
+test("should track how many times add() was called", () => {
+  calc.add("1,2");
+  calc.add("3");
+  expect(calc.getCalledCount()).toBe(2);
+});
+
+test("should ignore number greater than 1000",()=>{
+    expect(calc.add("2,1001")).toBe(2);
+});
+
+test("should include 1000 in sum",()=>{
+    expect(calc.add("2,1000")).toBe(1002);
+});
 
 });
