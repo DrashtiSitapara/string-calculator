@@ -36,5 +36,17 @@ test("should support custom delimiter with dash", () => {
   expect(calc.add("//-\n3-4-5")).toBe(12);
 });
 
+test("should throw exception for single negative number", () => {
+  expect(() => {
+    calc.add("-1");
+  }).toThrow("negatives not allowed: -1");
+});
+
+test("should throw exception for multiple negative numbers", () => {
+  expect(() => {
+    calc.add("2,-4,3,-5");
+  }).toThrow("negatives not allowed: -4, -5");
+});
+
 
 });

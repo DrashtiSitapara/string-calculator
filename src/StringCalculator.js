@@ -17,6 +17,11 @@ class StringCalculator {
 
    const splitRegex=new RegExp(`[${delimiter.join("")}]`);
    const numArray=numbers.split(splitRegex).map(Number);
+
+   const negatives = numArray.filter(n => n < 0);
+  if (negatives.length > 0) {
+    throw new Error(`negatives not allowed: ${negatives.join(", ")}`);
+  }
     return numArray.reduce((sum, num) => sum + num, 0);
   }
 
