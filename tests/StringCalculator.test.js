@@ -62,4 +62,17 @@ test("should include 1000 in sum",()=>{
     expect(calc.add("2,1000")).toBe(1002);
 });
 
+test("should support delimiters of any length", () => {
+  expect(calc.add("//[***]\n1***2***3")).toBe(6);
+});
+
+test("should support multiple single-char delimiters", () => {
+  expect(calc.add("//[*][%]\n1*2%3")).toBe(6);
+});
+
+test("should support multiple long delimiters", () => {
+  expect(calc.add("//[**][%%]\n1**2%%3")).toBe(6);
+});
+
+
 });
