@@ -7,9 +7,16 @@ class StringCalculator {
   add(numbers) {
     this.callCount++;
     if (numbers === "") return 0;
+    let delimiter=[",","\n"];
+    if(numbers.startsWith("//")){
+        const delimiterLineEnd=numbers.indexOf("\n");
+        const delimiterPart = numbers.substring(2, delimiterLineEnd);
+        delimiter = [delimiterPart];
+        numbers = numbers.substring(delimiterLineEnd + 1);
+    }
 
-    numbers=numbers.replace(/\n/g,",");
-    const numArray = numbers.split(",").map(Number);
+   const splitRegex=new RegExp(`[${delimiter.join("")}]`);
+   const numArray=numbers.split(splitRegex).map(Number);
     return numArray.reduce((sum, num) => sum + num, 0);
   }
 

@@ -28,4 +28,13 @@ test("should handle new line between numbers", () => {
   expect(calc.add("1\n2,3")).toBe(6);
 });
 
+test("should support custom single-character delimiter", () => {
+  expect(calc.add("//;\n1;2")).toBe(3);
+});
+
+test("should support custom delimiter with dash", () => {
+  expect(calc.add("//-\n3-4-5")).toBe(12);
+});
+
+
 });
