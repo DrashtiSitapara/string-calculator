@@ -1,42 +1,53 @@
- 
 class StringCalculator {
   constructor() {
     this.callCount = 0;
   }
 
-
-  add(numbers) {
+add(numbers) {
   this.callCount++;
-  if (numbers === "") return 0;
+  if (!numbers) return 0;
 
-  let delimiters = [",", "\n"];
+  const { delimiterList, cleanedNumbers } = this.extractDelimiters(numbers);
+  const splitRegex = this.buildDelimiterRegex(delimiterList);
+
+  const numArray = cleanedNumbers.split(splitRegex).map(Number);
+
+  this.checkForNegatives(numArray);
+
+  const filtered = numArray.filter(n => n <= 1000);
+  return filtered.reduce((sum, n) => sum + n, 0);
+}
+
+extractDelimiters(numbers) {
+  let delimiterList = [",", "\n"];
+  let cleanedNumbers = numbers;
 
   if (numbers.startsWith("//")) {
     const delimiterLineEnd = numbers.indexOf("\n");
     const delimiterSection = numbers.substring(2, delimiterLineEnd);
-    
-    const delimiterMatches = delimiterSection.match(/\[(.+?)\]/g);
+    cleanedNumbers = numbers.substring(delimiterLineEnd + 1);
 
-    if (delimiterMatches) {
-      delimiters = delimiterMatches.map(d => d.slice(1, -1));
-    } else {
-      delimiters = [delimiterSection];
-    }
-
-    numbers = numbers.substring(delimiterLineEnd + 1);
+    const matches = delimiterSection.match(/\[(.+?)\]/g);
+    delimiterList = matches
+      ? matches.map(d => d.slice(1, -1)) // remove [ and ]
+      : [delimiterSection];
   }
 
-  const splitRegex = new RegExp(delimiters.map(d => d.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')).join("|"));
+  return { delimiterList, cleanedNumbers };
+}
 
-  const numArray = numbers.split(splitRegex).map(Number);
+buildDelimiterRegex(delimiters) {
+  const escaped = delimiters.map(d =>
+    d.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+  );
+  return new RegExp(escaped.join("|"));
+}
 
+checkForNegatives(numArray) {
   const negatives = numArray.filter(n => n < 0);
   if (negatives.length > 0) {
     throw new Error(`negatives not allowed: ${negatives.join(", ")}`);
   }
-
-  const filtered = numArray.filter(n => n <= 1000);
-  return filtered.reduce((sum, n) => sum + n, 0);
 }
 
   getCalledCount() {
